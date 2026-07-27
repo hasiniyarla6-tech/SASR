@@ -1,43 +1,65 @@
-import StatCard from "./StatCard";
+import { useEffect, useState } from "react";
 
 function Dashboard() {
+
+  const [data, setData] = useState({
+    victims: 0,
+    drones: 0,
+    alerts: 0,
+    missions: 0,
+  });
+
+  useEffect(() => {
+
+    fetch("http://127.0.0.1:8000/dashboard")
+      .then((response) => response.json())
+      .then((result) => {
+        setData(result);
+      });
+
+  }, []);
+
   return (
-    <section className="bg-slate-900 min-h-screen p-10">
 
-      <h2 className="text-4xl text-white font-bold mb-8">
-        Mission Dashboard
-      </h2>
+    <div style={{ padding: "30px" }}>
 
-      <div className="grid grid-cols-4 gap-6">
+      <h1>Mission Dashboard</h1>
 
-        <StatCard
-          title="Victims Detected"
-          value="24"
-          color="bg-red-500"
-        />
+      <div
+        style={{
+          display: "grid",
+          gridTemplateColumns: "repeat(4,1fr)",
+          gap: "20px",
+          marginTop: "30px",
+        }}
+      >
 
-        <StatCard
-          title="Drones Active"
-          value="8"
-          color="bg-blue-500"
-        />
+        <div style={{background:"#ef4444",padding:"20px",color:"white",borderRadius:"10px"}}>
+          <h2>Victims</h2>
+          <h1>{data.victims}</h1>
+        </div>
 
-        <StatCard
-          title="Alerts"
-          value="5"
-          color="bg-yellow-500"
-        />
+        <div style={{background:"#3b82f6",padding:"20px",color:"white",borderRadius:"10px"}}>
+          <h2>Drones</h2>
+          <h1>{data.drones}</h1>
+        </div>
 
-        <StatCard
-          title="Missions"
-          value="12"
-          color="bg-green-500"
-        />
+        <div style={{background:"#f59e0b",padding:"20px",color:"white",borderRadius:"10px"}}>
+          <h2>Alerts</h2>
+          <h1>{data.alerts}</h1>
+        </div>
+
+        <div style={{background:"#22c55e",padding:"20px",color:"white",borderRadius:"10px"}}>
+          <h2>Missions</h2>
+          <h1>{data.missions}</h1>
+        </div>
 
       </div>
 
-    </section>
+    </div>
+
   );
+
 }
 
 export default Dashboard;
