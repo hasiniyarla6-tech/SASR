@@ -1,7 +1,13 @@
 import { useEffect, useState } from "react";
+import { motion } from "framer-motion";
+import {
+  Users,
+  Drone,
+  TriangleAlert,
+  ShieldCheck,
+} from "lucide-react";
 
 function Dashboard() {
-
   const [data, setData] = useState({
     victims: 0,
     drones: 0,
@@ -10,56 +16,122 @@ function Dashboard() {
   });
 
   useEffect(() => {
-
     fetch("http://127.0.0.1:8000/dashboard")
-      .then((response) => response.json())
-      .then((result) => {
-        setData(result);
-      });
-
+      .then((res) => res.json())
+      .then((result) => setData(result))
+      .catch((err) => console.log(err));
   }, []);
 
+  const cards = [
+    {
+      title: "Victims",
+      value: data.victims,
+      color: "from-red-500 to-red-700",
+      icon: <Users size={34} />,
+    },
+    {
+      title: "Drones",
+      value: data.drones,
+      color: "from-blue-500 to-cyan-600",
+      icon: <Drone size={34} />,
+    },
+    {
+      title: "Alerts",
+      value: data.alerts,
+      color: "from-orange-500 to-yellow-600",
+      icon: <TriangleAlert size={34} />,
+    },
+    {
+      title: "Missions",
+      value: data.missions,
+      color: "from-green-500 to-emerald-700",
+      icon: <ShieldCheck size={34} />,
+    },
+  ];
+
   return (
+    <section className="max-w-7xl mx-auto px-8 py-20 text-white">
 
-    <div style={{ padding: "30px" }}>
-
-      <h1>Mission Dashboard</h1>
-
-      <div
-        style={{
-          display: "grid",
-          gridTemplateColumns: "repeat(4,1fr)",
-          gap: "20px",
-          marginTop: "30px",
-        }}
+      <motion.h2
+        initial={{ opacity: 0, y: -30 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.6 }}
+        className="text-5xl font-bold text-center mb-4"
       >
+        AI Mission Dashboard
+      </motion.h2>
 
-        <div style={{background:"#ef4444",padding:"20px",color:"white",borderRadius:"10px"}}>
-          <h2>Victims</h2>
-          <h1>{data.victims}</h1>
-        </div>
+      <p className="text-center text-slate-400 text-lg mb-14">
+        Real-time disaster monitoring and rescue mission analytics
+      </p>
 
-        <div style={{background:"#3b82f6",padding:"20px",color:"white",borderRadius:"10px"}}>
-          <h2>Drones</h2>
-          <h1>{data.drones}</h1>
-        </div>
+      <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
 
-        <div style={{background:"#f59e0b",padding:"20px",color:"white",borderRadius:"10px"}}>
-          <h2>Alerts</h2>
-          <h1>{data.alerts}</h1>
-        </div>
+        {cards.map((card, index) => (
 
-        <div style={{background:"#22c55e",padding:"20px",color:"white",borderRadius:"10px"}}>
-          <h2>Missions</h2>
-          <h1>{data.missions}</h1>
-        </div>
+          <motion.div
+            key={index}
+            initial={{ opacity: 0, y: 40 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            transition={{
+              delay: index * 0.15,
+              duration: 0.5,
+            }}
+            whileHover={{
+              scale: 1.05,
+            }}
+            className={`bg-gradient-to-br ${card.color} rounded-3xl p-8 shadow-2xl`}
+          >
+
+            <div className="flex justify-between items-center">
+
+              <div>
+
+                <h3 className="text-xl font-semibold">
+                  {card.title}
+                </h3>
+
+                <h1 className="text-5xl font-bold mt-5">
+                  {card.value}
+                </h1>
+
+              </div>
+
+              <div className="opacity-90">
+                {card.icon}
+              </div>
+
+            </div>
+
+          </motion.div>
+
+        ))}
 
       </div>
 
-    </div>
+      <motion.div
+        initial={{ opacity: 0 }}
+        whileInView={{ opacity: 1 }}
+        transition={{ delay: 0.5 }}
+        className="mt-12 bg-slate-900 border border-slate-700 rounded-3xl p-8"
+      >
 
+        <h3 className="text-3xl font-bold mb-4 text-cyan-400">
+          Mission Overview
+        </h3>
+
+        <p className="text-slate-300 leading-8 text-lg">
+          The Smart Autonomous Search & Rescue System continuously
+          monitors disaster scenes using Artificial Intelligence.
+          Uploaded images are analysed to detect victims, estimate
+          rescue priority, and assist emergency response teams with
+          real-time mission recommendations.
+        </p>
+
+      </motion.div>
+
+    </section>
   );
-
 }
 
 export default Dashboard;

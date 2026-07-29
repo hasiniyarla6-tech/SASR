@@ -45,23 +45,48 @@ async def upload_image(file: UploadFile = File(...)):
     # Count detected people
     people_count = 0
     confidences = []
+
     for result in results:
         for box in result.boxes:
+
             class_id = int(box.cls[0])
 
-            # COCO dataset: class 0 = person
+            # COCO class 0 = Person
             if class_id == 0:
+
                 people_count += 1
+
                 confidence = float(box.conf[0])
 
-            confidences.append(round(confidence * 100, 2))
-    # Save image with detections
+                confidences.append(round(confidence * 100, 2))
+
+    # Save detected image
     results[0].save(filename=f"uploads/detected_{file.filename}")
+
+    # ----------------------------
+    # AI Risk Assessment
+    # ----------------------------
+    if people_count == 0:
+        risk = "LOW"
+        recommendation = "Continue monitoring the disaster area."
+
+    elif people_count <= 2:
+        risk = "MEDIUM"
+        recommendation = "Deploy one rescue team immediately."
+
+    else:
+        risk = "HIGH"
+        recommendation = "Deploy multiple rescue teams immediately."
+
+    mission_status = "ACTIVE"
 
     return {
         "message": "Detection Completed",
         "filename": file.filename,
         "people_detected": people_count,
-         "confidence_scores": confidences,
+        "confidence_scores": confidences,
+        "risk_level": risk,
+        "mission_status": mission_status,
+        "recommendation": recommendation,
         "output_image": f"uploads/detected_{file.filename}"
     }
