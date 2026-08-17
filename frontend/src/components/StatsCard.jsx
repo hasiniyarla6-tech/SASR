@@ -1,15 +1,31 @@
 function StatsCard({ title, value, color }) {
   return (
     <div
-      className={`${color} rounded-xl p-6 shadow-xl hover:scale-105 transition duration-300`}
+      className={`
+        ${color}
+        rounded-2xl
+        p-6
+        text-white
+        shadow-lg
+        relative
+        overflow-hidden
+        transition-all
+        duration-300
+        hover:-translate-y-1
+        hover:shadow-xl
+      `}
     >
-      <h2 className="text-white text-lg font-semibold">
-        {title}
-      </h2>
 
-      <p className="text-4xl font-bold text-white mt-3">
+      <div className="absolute -right-8 -top-8 w-24 h-24 rounded-full bg-white/10" />
+
+      <p className="text-sm font-medium text-white/80">
+        {title}
+      </p>
+
+      <p className="text-3xl font-extrabold mt-3">
         {value}
       </p>
+
     </div>
   );
 }
